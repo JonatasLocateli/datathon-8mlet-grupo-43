@@ -73,3 +73,34 @@ data/        → dados locais (não versionados - baixar via link acima)
 **Tratamento aplicado:** colunas `duration` e `pdays` removidas do dataset de trabalho; coluna `contatado_antes` adicionada.
 
 **Notebook:** `notebooks/eda.ipynb`
+
+## Serviço de Recomendação (API)
+
+A recomendação de oferta é servida via API REST construída com FastAPI, consumindo
+o estado do bandit contextual treinado (persistido em `models/bandit_state.json`).
+
+### Como executar
+
+```bash
+uvicorn src.api.main:app --reload
+```
+
+A API sobe em `http://127.0.0.1:8000`. Documentação interativa (Swagger) disponível em `http://127.0.0.1:8000/docs`.
+
+### Endpoint
+
+**POST** `/recomendar`
+
+Requisição:
+```json
+{"idade": 68}
+```
+
+Resposta:
+```json
+{
+  "segmento": "idoso",
+  "oferta_recomendada": "Consultoria_Invest",
+  "taxa_conversao_estimada": 0.2764
+}
+```
