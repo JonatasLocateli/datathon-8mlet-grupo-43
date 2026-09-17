@@ -110,8 +110,8 @@ A recomendação de oferta é servida via API REST construída com FastAPI, cons
 o estado do bandit contextual treinado (persistido em `models/bandit_state.json`).
 A API é containerizada (Dockerfile) e está publicada no Render.
 
-**URL pública:** https://SUA-URL-AQUI.onrender.com
-**Documentação interativa (Swagger):** https://SUA-URL-AQUI.onrender.com/docs
+**URL pública:** https://datathon-8mlet-grupo-43.onrender.com
+**Documentação interativa (Swagger):** https://datathon-8mlet-grupo-43.onrender.com/docs
 
 > Nota: o serviço roda em plano gratuito do Render, que "adormece" após período de
 > inatividade — a primeira requisição após um período ocioso pode levar até ~60s.
