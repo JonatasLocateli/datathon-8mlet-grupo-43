@@ -104,3 +104,45 @@ Resposta:
   "taxa_conversao_estimada": 0.2764
 }
 ```
+## Serviço de Recomendação (API)
+
+A recomendação de oferta é servida via API REST construída com FastAPI, consumindo
+o estado do bandit contextual treinado (persistido em `models/bandit_state.json`).
+A API é containerizada (Dockerfile) e está publicada no Render.
+
+**URL pública:** https://SUA-URL-AQUI.onrender.com
+**Documentação interativa (Swagger):** https://SUA-URL-AQUI.onrender.com/docs
+
+> Nota: o serviço roda em plano gratuito do Render, que "adormece" após período de
+> inatividade — a primeira requisição após um período ocioso pode levar até ~60s.
+
+### Como executar localmente
+
+**Via Docker:**
+```bash
+docker build -t datathon-api .
+docker run -p 8000:8000 datathon-api
+```
+
+**Ou diretamente com Uvicorn:**
+```bash
+uvicorn src.api.main:app --reload
+```
+
+### Endpoint
+
+**POST** `/recomendar`
+
+Requisição:
+```json
+{"idade": 68}
+```
+
+Resposta:
+```json
+{
+  "segmento": "idoso",
+  "oferta_recomendada": "Consultoria_Invest",
+  "taxa_conversao_estimada": 0.2764
+}
+```
