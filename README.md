@@ -146,3 +146,35 @@ Resposta:
   "taxa_conversao_estimada": 0.2764
 }
 ```
+## Arquitetura-alvo em Nuvem
+
+A API de recomendação já está implementada e publicada como um container Docker no
+Render, validando a viabilidade da arquitetura em um ambiente real. Para um cenário
+de produção em maior escala, os componentes equivalentes em AWS seriam: o container
+FastAPI rodando em **ECS (Fargate)** ou **App Runner**, com deploy automatizado via
+**CodePipeline** a partir do repositório Git; o artefato do modelo
+(`bandit_state.json`) armazenado no **S3**, desacoplando o ciclo de vida do modelo
+do deploy da aplicação; e o re-treinamento periódico do bandit orquestrado via
+**EventBridge + Lambda** (ou um job no **SageMaker**, caso o pipeline de treino
+cresça em complexidade), consumindo novos dados de conversão e publicando um
+`bandit_state.json` atualizado no S3.
+
+O rastreamento de experimentos (MLflow, Etapa 7) hoje roda localmente; em produção,
+seria hospedado em uma instância dedicada (EC2 ou ECS) com backend de armazenamento
+no S3, centralizando o histórico de execuções para toda a equipe.
+
+```mermaid
+flowchart LR
+    subgraph impl["Implementado (Render)"]
+        A[Cliente] -->|POST /recomendar| B[API FastAPI<br/>Docker]
+        B --> C[(bandit_state.json)]
+    end
+
+    subgraph aws["Arquitetura-alvo AWS"]
+        D[ECS Fargate<br/>App Runner] --> E[(S3<br/>modelo)]
+        F[EventBridge] --> G[Lambda / SageMaker<br/>re-treino]
+        G --> E
+        H[CodePipeline] --> D
+        I[MLflow<br/>EC2/ECS] -.-> G
+    end
+```
