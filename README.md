@@ -27,25 +27,28 @@ do bandit representando três ofertas fictícias de produto:
 ## Como executar
 
 ### Pré-requisitos
+
 - Python 3.10+
 
 ### Instalação
-\`\`\`bash
+
+```bash
 git clone https://github.com/JonatasLocateli/datathon-8mlet-grupo-43.git
 cd datathon-8mlet-grupo-43
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-\`\`\`
+```
 
 ### Estrutura do projeto
-\`\`\`
-notebooks/     → EDA, modelagem, avaliação e tracking de experimentos
-src/api/       → serviço FastAPI de recomendação
+
+```
+notebooks/     → EDA, modelagem, avaliacao e tracking de experimentos
+src/api/       → servico FastAPI de recomendacao
 models/        → artefato do bandit treinado (bandit_state.json)
-Dockerfile     → containerização da API
-data/          → dados locais (não versionados — baixar via link acima)
-\`\`\`
+Dockerfile     → containerizacao da API
+data/          → dados locais (nao versionados - baixar via link acima)
+```
 
 ## Base de Dados e Análise Exploratória
 
@@ -127,33 +130,37 @@ A API é containerizada (Dockerfile) e está publicada no Render.
 ### Como executar localmente
 
 **Via Docker:**
-\`\`\`bash
+
+```bash
 docker build -t datathon-api .
 docker run -p 8000:8000 datathon-api
-\`\`\`
+```
 
 **Ou diretamente com Uvicorn:**
-\`\`\`bash
+
+```bash
 uvicorn src.api.main:app --reload
-\`\`\`
+```
 
 ### Endpoint
 
 **POST** `/recomendar`
 
 Requisição:
-\`\`\`json
+
+```json
 {"idade": 68}
-\`\`\`
+```
 
 Resposta:
-\`\`\`json
+
+```json
 {
   "segmento": "idoso",
   "oferta_recomendada": "Consultoria_Invest",
   "taxa_conversao_estimada": 0.2764
 }
-\`\`\`
+```
 
 ## Arquitetura-alvo em Nuvem
 
@@ -171,21 +178,21 @@ O rastreamento de experimentos (MLflow) hoje roda localmente; em produção, ser
 hospedado em uma instância dedicada (EC2 ou ECS) com backend de armazenamento no
 S3, centralizando o histórico de execuções para toda a equipe.
 
-\`\`\`mermaid
+```mermaid
 flowchart LR
     subgraph impl["Implementado (Render)"]
-        A[Cliente] -->|POST /recomendar| B[API FastAPI<br/>Docker]
+        A[Cliente] -->|POST /recomendar| B[API FastAPI Docker]
         B --> C[(bandit_state.json)]
     end
 
     subgraph aws["Arquitetura-alvo AWS"]
-        D[ECS Fargate<br/>App Runner] --> E[(S3<br/>modelo)]
-        F[EventBridge] --> G[Lambda / SageMaker<br/>re-treino]
+        D[ECS Fargate / App Runner] --> E[(S3 - modelo)]
+        F[EventBridge] --> G[Lambda / SageMaker - re-treino]
         G --> E
         H[CodePipeline] --> D
-        I[MLflow<br/>EC2/ECS] -.-> G
+        I[MLflow EC2/ECS] -.-> G
     end
-\`\`\`
+```
 
 ## Ciclo de Vida MLOps (MLflow)
 
@@ -196,9 +203,9 @@ modelo treinado (`bandit_state.json`).
 
 ### Como visualizar
 
-\`\`\`bash
+```bash
 cd notebooks
 mlflow ui --backend-store-uri ./mlruns
-\`\`\`
+```
 
 Interface disponível em `http://127.0.0.1:5000` (aba "Model training").
