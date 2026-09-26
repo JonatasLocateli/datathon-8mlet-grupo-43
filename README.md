@@ -6,6 +6,8 @@
 ![MLflow](https://img.shields.io/badge/MLflow-tracking-0194E2?logo=mlflow&logoColor=white)
 ![Render](https://img.shields.io/badge/Deploy-Render-46E3B7?logo=render&logoColor=white)
 
+> Link da Apresentação: [https://drive.google.com/file/d/1tCMFxhFMB_qDmL6-gaICoPbJEu4_Q7gY/view?usp=sharing](https://drive.google.com/file/d/1tCMFxhFMB_qDmL6-gaICoPbJEu4_Q7gY/view?usp=sharing)
+
 Plataforma de experimentação adaptativa para decisão de ofertas financeiras,
 usando um bandit contextual (Thompson Sampling) para personalizar a recomendação
 por perfil de cliente, comparada contra uma abordagem de regra fixa (baseline).
