@@ -1,0 +1,38 @@
+{
+  "jovem": {
+    "alpha": {
+      "Deposito_Turbo": 134,
+      "Deposito_Turbo_Plus": 1876,
+      "Consultoria_Invest": 124
+    },
+    "beta": {
+      "Deposito_Turbo": 1022,
+      "Deposito_Turbo_Plus": 12351,
+      "Consultoria_Invest": 1012
+    }
+  },
+  "meia_idade": {
+    "alpha": {
+      "Deposito_Turbo": 1097,
+      "Deposito_Turbo_Plus": 365,
+      "Consultoria_Invest": 353
+    },
+    "beta": {
+      "Deposito_Turbo": 10824,
+      "Deposito_Turbo_Plus": 4018,
+      "Consultoria_Invest": 3794
+    }
+  },
+  "idoso": {
+    "alpha": {
+      "Deposito_Turbo": 16,
+      "Deposito_Turbo_Plus": 18,
+      "Consultoria_Invest": 1114
+    },
+    "beta": {
+      "Deposito_Turbo": 77,
+      "Deposito_Turbo_Plus": 95,
+      "Consultoria_Invest": 2916
+    }
+  }
+}

@@ -1,0 +1,9 @@
+artifact_location: file:///home/jonatas-locateli/FIAP/datathon-8mlet-grupo-43/notebooks/mlruns/553882645907772415
+creation_time: 1789784825289
+effective_trace_archival_retention: null
+experiment_id: '553882645907772415'
+last_update_time: 1789784825289
+lifecycle_stage: active
+name: datathon-bandit-recomendacao
+trace_location: null
+workspace: default

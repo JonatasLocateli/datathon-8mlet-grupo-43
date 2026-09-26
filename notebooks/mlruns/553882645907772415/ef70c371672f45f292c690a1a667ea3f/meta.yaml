@@ -1,0 +1,14 @@
+artifact_uri: file:///home/jonatas-locateli/FIAP/datathon-8mlet-grupo-43/notebooks/mlruns/553882645907772415/ef70c371672f45f292c690a1a667ea3f/artifacts
+end_time: 1789784825894
+entry_point_name: ''
+experiment_id: '553882645907772415'
+lifecycle_stage: active
+run_id: ef70c371672f45f292c690a1a667ea3f
+run_name: thompson_sampling_contextual
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1789784825505
+status: 3
+tags: []
+user_id: jonatas-locateli
