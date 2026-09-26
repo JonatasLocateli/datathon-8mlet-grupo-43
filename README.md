@@ -1,5 +1,11 @@
 # Datathon - Grupo 43 - FIAP MLET
 
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-API-009688?logo=fastapi&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-containerizado-2496ED?logo=docker&logoColor=white)
+![MLflow](https://img.shields.io/badge/MLflow-tracking-0194E2?logo=mlflow&logoColor=white)
+![Render](https://img.shields.io/badge/Deploy-Render-46E3B7?logo=render&logoColor=white)
+
 Plataforma de experimentação adaptativa para decisão de ofertas financeiras,
 usando um bandit contextual (Thompson Sampling) para personalizar a recomendação
 por perfil de cliente, comparada contra uma abordagem de regra fixa (baseline).
@@ -97,6 +103,14 @@ explicitamente, para o mesmo padrão identificado na EDA:
 | Idoso | Consultoria Invest | 95.2% |
 | Jovem | Depósito Turbo+ | 86.1% |
 | Meia-idade | Depósito Turbo | 58.3% |
+
+Os segmentos de idade definem apenas o contexto da decisão — não determinam qual
+oferta é melhor. Cada segmento inicia com uma distribuição Beta(1,1), sem
+conhecimento prévio, e o braço vencedor é aprendido unicamente a partir de
+resultados observados de conversão. A convergência para menos de 100% em todos os
+segmentos (ex: 95.2% no idoso, não 100%) reflete que o bandit mantém exploração
+residual, preservando capacidade de adaptação caso o comportamento dos clientes
+mude.
 
 ## Avaliação e Golden Set
 
@@ -209,3 +223,50 @@ mlflow ui --backend-store-uri ./mlruns
 ```
 
 Interface disponível em `http://127.0.0.1:5000` (aba "Model training").
+
+## Principais Decisões Técnicas
+
+- **Braços simulados a partir de propensão real:** como a base não contém resposta
+  a ofertas alternativas (problema do contrafactual), a conversão por braço foi
+  simulada a partir de um modelo auxiliar de propensão, com multiplicadores
+  calculados diretamente da taxa de conversão real por faixa etária — não
+  arbitrários — para manter a simulação rastreável e defensável.
+- **Baseline como "melhor braço histórico":** em vez de uma regra fixa arbitrária
+  (ex: sempre a mesma oferta), o baseline foi definido como o braço de maior
+  conversão agregada, por representar de forma mais realista a decisão de um
+  banco tradicional baseada em dados de campanhas passadas.
+- **Contexto limitado a uma dimensão (idade):** a segmentação do bandit usa
+  apenas a faixa etária, o sinal mais forte identificado na EDA. Essa escolha
+  também preserva volume suficiente de observações por segmento para uma
+  convergência confiável do Thompson Sampling dentro da simulação — segmentar
+  por múltiplas variáveis multiplicaria o número de grupos e reduziria as
+  observações disponíveis em cada um. Ver "Possíveis Evoluções Futuras" para o
+  caminho natural de expansão dessa limitação.
+- **Persistência do estado do bandit separada da API:** o notebook realiza o
+  treinamento e salva os parâmetros aprendidos (`alpha`/`beta` por braço e
+  segmento) em `models/bandit_state.json`; a API apenas consome esse artefato,
+  sem re-treinar a cada inicialização — separação entre treino e serviço,
+  prática recomendada de MLOps.
+- **Containerização e deploy real:** embora o enunciado exija apenas um parágrafo
+  descrevendo a arquitetura-alvo em nuvem, a API foi de fato containerizada e
+  publicada em produção no Render, validando a arquitetura descrita com uma
+  implementação real.
+
+## Possíveis Evoluções Futuras
+
+- **Bandit linear contextual:** migrar da segmentação discreta por faixa etária
+  para um bandit linear contextual, no qual cada braço estima a probabilidade de
+  conversão a partir de todas as features disponíveis (idade, profissão,
+  histórico de contato, indicadores macroeconômicos) sem a necessidade de
+  particionar a base em grupos — permitindo incorporar mais contexto sem o custo
+  de diluir as observações por segmento.
+- **Re-treinamento automatizado:** orquestrar a atualização periódica do
+  `bandit_state.json` a partir de novos dados de conversão, conforme descrito na
+  arquitetura-alvo em nuvem (EventBridge + Lambda ou SageMaker).
+- **Segmentação por múltiplas dimensões:** avaliar combinações de contexto (ex:
+  idade × resultado de campanha anterior) com testes de significância
+  estatística por segmento, garantindo volume mínimo de dados antes de
+  fragmentar ainda mais os grupos.
+- **MLflow centralizado:** mover o tracking de experimentos de um backend local
+  em arquivo para uma instância dedicada com backend em banco de dados,
+  possibilitando colaboração entre múltiplos membros do time.
