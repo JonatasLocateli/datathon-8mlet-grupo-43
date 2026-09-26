@@ -215,14 +215,21 @@ calculados, seed) e as métricas de conversão (baseline, Thompson Sampling
 não-contextual e contextual) são registrados via MLflow, junto com o artefato do
 modelo treinado (`bandit_state.json`).
 
+O histórico de execuções (`notebooks/mlruns/`) é versionado no próprio
+repositório — não é necessário re-executar o notebook para visualizar os
+resultados já registrados.
+
 ### Como visualizar
 
+A partir da raiz do projeto:
+
 ```bash
-cd notebooks
-mlflow ui --backend-store-uri ./mlruns
+mlflow ui --backend-store-uri ./notebooks/mlruns
 ```
 
-Interface disponível em `http://127.0.0.1:5000` (aba "Model training").
+Interface disponível em `http://127.0.0.1:5000` (aba "Model training"), listando
+o experimento `datathon-bandit-recomendacao` com os parâmetros, métricas e o
+artefato `bandit_state.json` de cada execução.
 
 ## Principais Decisões Técnicas
 
